@@ -107,3 +107,11 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# 追加したフリーアセット一式を除外
+Assets/FreeAssets/
+Assets/FreeAssets.meta
+
+# Unityの初期チュートリアルアセットを除外
+Assets/TutorialInfo/
+Assets/TutorialInfo.meta
