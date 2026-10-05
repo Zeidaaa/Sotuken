@@ -1,0 +1,20 @@
+using UnityEngine;
+
+public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
+{
+    // 自動検索はせず、Awakeで登録されたインスタンスを返すだけにする
+    public static T Instance { get; private set; }
+
+    protected virtual void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this as T;
+
+        DontDestroyOnLoad(gameObject);
+    }
+}
