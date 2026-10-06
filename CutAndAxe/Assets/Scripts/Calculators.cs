@@ -8,16 +8,16 @@ public static class Calculators
         return UnityEngine.Random.value < rate;
     }
 
-    public static float OnHitDamege(PlayerStatus playerStatus, TreeStatus treeStatus)
+    public static float OnHitDamage(PlayerStatus playerStatus, TreeStatus treeStatus)
     {
-        float damege = playerStatus.finalAttack - treeStatus.defense;
+        float damage = playerStatus.finalAttack - treeStatus.defense;
 
         // クリティカル処理
         if (Probability(playerStatus.critical))
         {
-            damege *= 1f + (playerStatus.criticalDamage * 0.01f);
+            damage *= 1f + (playerStatus.criticalDamage * 0.01f);
         }
 
-        return damege;
+        return damage;
     }
 }

@@ -95,7 +95,7 @@ public class AxeHolder : MonoBehaviour
             m_hitTreesThisAttack.Add(hitTree);
 
             // ダメージ計算
-            hitTree.m_treeStatus.CurrentHp -= Calculators.OnHitDamege(m_player.m_playerStatus, hitTree.m_treeStatus);
+            hitTree.m_treeStatus.CurrentHp -= Calculators.OnHitDamage(m_player.m_playerStatus, hitTree.m_treeStatus);
             Debug.Log($"木のHP: {hitTree.m_treeStatus.CurrentHp}");
         }
     }
