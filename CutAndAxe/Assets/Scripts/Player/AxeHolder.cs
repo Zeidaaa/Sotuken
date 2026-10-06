@@ -4,14 +4,23 @@ using UnityEngine;
 public class AxeHolder : MonoBehaviour
 {
     [SerializeField] private Animator m_animator;
+    [SerializeField] private SphereCollider m_axeCollider;
     [SerializeField] private Player m_player;
 
-    private float m_hitBoxStart = 1.16f;
+    private float m_hitBoxStart = 1.083f;
     private float m_hitBoxEnd = 1.5f;
     private float m_animationTotalTime = 2.0f;
-    private float m_animatorDefaultSpeed = 1.0f;
+
+    private float m_defaultAnimatorSpeed = 1.0f;
+    private float m_defaultAttackRange = 1.0f;
 
     private bool m_isAttacking = false;
+
+    private void Start()
+    {
+        if (m_axeCollider == null) return;
+        m_axeCollider.enabled = false;
+    }
 
     private void Update()
     {
@@ -25,9 +34,13 @@ public class AxeHolder : MonoBehaviour
     {
         m_isAttacking = true;
 
+        float attackSpeedMultiplier = m_defaultAnimatorSpeed;
+
         // ステータスから攻撃速度に基づくアニメーション速度を計算
-        float attackSpeedMultiplier = m_player != null ? m_player.m_playerStatus.AttackSpeed : m_animatorDefaultSpeed;
+        if (m_player == null) Debug.LogWarning("m_playerが設定されていません。 => AxeHolder.cs");
+        else attackSpeedMultiplier = m_player.m_playerStatus.AttackSpeed;
         m_animator.speed = attackSpeedMultiplier;
+
         m_animator.SetTrigger("TriggerAxe_Cut");
 
         yield return new WaitForSeconds(m_hitBoxStart / attackSpeedMultiplier);
@@ -37,8 +50,7 @@ public class AxeHolder : MonoBehaviour
         EndHitBox();
     
         yield return new WaitForSeconds((m_animationTotalTime - m_hitBoxEnd) / attackSpeedMultiplier);
-
-        m_animator.speed = m_animatorDefaultSpeed;
+        
         m_isAttacking = false;
         
         if (InputManager.Instance != null && InputManager.Instance.IsAttackingPressed)
@@ -49,13 +61,19 @@ public class AxeHolder : MonoBehaviour
 
     private void StartHitBox()
     {
-        Debug.Log("攻撃判定：開始");
-        // 例: m_axeCollider.enabled = true;
+        if (m_axeCollider == null) return; 
+        
+        float rangeMultiplier = m_defaultAttackRange;
+        if (m_player == null) Debug.LogWarning("m_playerが設定されていません。 => AxeHolder.cs");
+        else rangeMultiplier = m_player.m_playerStatus.AttackRange;
+
+        m_axeCollider.radius = rangeMultiplier;
+        m_axeCollider.enabled = true;
     }
 
     private void EndHitBox()
     {
-        Debug.Log("攻撃判定：終了");
-        // 例: m_axeCollider.enabled = false;
+        if (m_axeCollider == null) return;
+        m_axeCollider.enabled = false;
     }
 }
