@@ -32,17 +32,15 @@ public class MainCamera : MonoBehaviour
 
     private void Update()
     {
-        if (InputManager.Instance.MoveInput.sqrMagnitude > 0.01f)
+        if (InputManager.Instance.MoveInput.sqrMagnitude > 0.01f && m_player.IsGraunded)
         {
-            // 速度に応じて揺れの速さを調整する（速く歩くほど激しく揺れる）
             float currentFrequency = m_shakingIntensity * (m_player.m_playerStatus.MoveSpeed / 1.0f);
 
             m_timer += Time.deltaTime * currentFrequency;
 
             float shakingSin = Mathf.Sin(m_timer);
             float shakingCos = Mathf.Cos(m_timer / 2.0f);
-
-            // 振れ幅を適用
+            
             float verticalOffset = shakingSin * m_shakingMagnitude;
             float horizontalOffset = shakingCos * m_shakingMagnitude * m_shakingHorizontalRatio;
 
@@ -54,10 +52,8 @@ public class MainCamera : MonoBehaviour
         }
         else
         {
-            // 停止時は中心位置へスムーズに戻す
             transform.localPosition = Vector3.Lerp(transform.localPosition, m_startLocalPos, Time.deltaTime * m_shakingDampenedSpeed);
 
-            // 完全に止まったらタイマーをリセットして誤差を防ぐ
             if (Vector3.Distance(transform.localPosition, m_startLocalPos) < 0.001f)
             {
                 transform.localPosition = m_startLocalPos;

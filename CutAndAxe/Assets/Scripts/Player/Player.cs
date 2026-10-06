@@ -6,6 +6,13 @@ public class Player : MonoBehaviour
     public PlayerStatus m_playerStatus;
 
     private CharacterController controller;
+    private float m_verticalVelocity;
+    private float m_gravity = -9.81f;
+
+    public bool IsGraunded
+    {
+        get => controller.isGrounded;
+    }
 
     private void Reset()
     {
@@ -39,8 +46,17 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
+        // 重力の計算
+        if (controller.isGrounded) m_verticalVelocity = -2.0f;
+        else m_verticalVelocity += m_gravity * Time.deltaTime;
+
+        // 入力による移動量の計算
         Vector2 moveInput = InputManager.Instance.MoveInput;
         Vector3 moveDir = transform.right * moveInput.x + transform.forward * moveInput.y;
-        controller.Move(moveDir * m_playerStatus.MoveSpeed * Time.deltaTime);
+
+        // 移動量と重力を合算して移動
+        Vector3 totalMove = moveDir * m_playerStatus.MoveSpeed;
+        totalMove.y = m_verticalVelocity;
+        controller.Move(totalMove * Time.deltaTime);
     }
 }
