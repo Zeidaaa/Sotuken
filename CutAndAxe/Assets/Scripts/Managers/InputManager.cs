@@ -7,6 +7,8 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
 
+    public bool IsAttackingPressed => inputActions.Player.Attack.IsPressed();
+
     protected override void Awake()
     {
         base.Awake();
