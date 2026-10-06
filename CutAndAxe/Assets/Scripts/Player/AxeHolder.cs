@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AxeHolder : MonoBehaviour
@@ -15,6 +16,8 @@ public class AxeHolder : MonoBehaviour
     private float m_defaultAttackRange = 1.0f;
 
     private bool m_isAttacking = false;
+
+    private HashSet<Tree> m_hitTreesThisAttack = new HashSet<Tree>();
 
     private void Start()
     {
@@ -62,6 +65,8 @@ public class AxeHolder : MonoBehaviour
     private void StartHitBox()
     {
         if (m_axeCollider == null) return; 
+
+        m_hitTreesThisAttack.Clear();
         
         float rangeMultiplier = m_defaultAttackRange;
         if (m_player == null) Debug.LogWarning("m_playerが設定されていません。 => AxeHolder.cs");
@@ -75,5 +80,23 @@ public class AxeHolder : MonoBehaviour
     {
         if (m_axeCollider == null) return;
         m_axeCollider.enabled = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (m_axeCollider == null || !m_axeCollider.enabled) return;
+
+        if (other.CompareTag("Tree"))
+        {
+            Tree hitTree = other.gameObject.GetComponent<Tree>();
+
+            // 二重ヒット防止
+            if (m_hitTreesThisAttack.Contains(hitTree)) return;
+            m_hitTreesThisAttack.Add(hitTree);
+
+            // ダメージ計算
+            hitTree.m_treeStatus.CurrentHp -= Calculators.OnHitDamege(m_player.m_playerStatus, hitTree.m_treeStatus);
+            Debug.Log($"木のHP: {hitTree.m_treeStatus.CurrentHp}");
+        }
     }
 }
