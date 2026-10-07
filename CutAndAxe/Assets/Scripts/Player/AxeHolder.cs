@@ -95,7 +95,7 @@ public class AxeHolder : MonoBehaviour
             m_hitTreesThisAttack.Add(hitTree);
 
             // ダメージ計算
-            hitTree.OnHitDamage(m_player.m_playerStatus);
+            hitTree.OnHitDamage(m_player);
         }
     }
 }

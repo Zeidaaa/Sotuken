@@ -59,4 +59,15 @@ public class Player : MonoBehaviour
         totalMove.y = m_verticalVelocity;
         controller.Move(totalMove * Time.deltaTime);
     }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Wood"))
+        {
+            Destroy(other.gameObject);
+            m_playerStatus.Wood++;
+
+            Debug.Log($"木材を取得しました。現在の木材数: {m_playerStatus.Wood}");
+        }
+    }
 }
