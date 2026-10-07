@@ -52,7 +52,7 @@ public class TreeCrown : MonoBehaviour
             // ドロップ処理
             for (int i = 0; i < m_dropNum; i++)
             {
-                var dropPos = GetRandomPositionInSphere(transform.position, 3.0f);
+                var dropPos = GetRandomPositionInSphere(transform.position, 2.0f);
                 Instantiate(m_woodPrefab, dropPos, Quaternion.identity);
             }
 
