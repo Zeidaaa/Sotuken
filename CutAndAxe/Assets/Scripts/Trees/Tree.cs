@@ -20,11 +20,19 @@ public class Tree : MonoBehaviour
 
     void Start()
     {
-        
+        m_treeStatus.currentHp = m_treeStatus.maxHp;
     }
 
     void Update()
     {
         
+    }
+
+    public void OnHitDamage(PlayerStatus playerStatus)
+    {
+        m_treeStatus.currentHp -= Calculators.OnHitDamage(playerStatus, m_treeStatus);
+        if (m_treeStatus.currentHp <= 0) m_treeStatus.currentHp = 0;
+
+        Debug.Log("木のHP: " + m_treeStatus.currentHp);
     }
 }
