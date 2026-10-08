@@ -19,8 +19,6 @@ public class Tree : MonoBehaviour
     [SerializeField]
     private Material[] m_treeMaterial;
     [SerializeField]
-    private Vector3 m_treeColliderCenter = new Vector3(0, 3.5f, 0);
-    [SerializeField]
     private float m_treeColliderRadius = 0.4f;
     [SerializeField]
     private float m_treeColliderHeight = 7f;
@@ -29,8 +27,6 @@ public class Tree : MonoBehaviour
     private Mesh m_stumpMesh;
     [SerializeField]
     private Material[] m_stumpMaterial;
-    [SerializeField]
-    private Vector3 m_stumpColliderCenter = new Vector3(0, 0.3f, 0);
     [SerializeField]
     private float m_stumpColliderRadius = 0.25f;
     [SerializeField]
@@ -43,6 +39,7 @@ public class Tree : MonoBehaviour
     private MeshRenderer m_meshRenderer;
     private CapsuleCollider m_capsuleCollider;
 
+    private Vector3 m_defaultScale = Vector3.one;
     private Vector3 m_fadeScale = Vector3.one;
     private bool m_isFadeScale = false;
 
@@ -77,6 +74,8 @@ public class Tree : MonoBehaviour
         m_meshFilter = GetComponent<MeshFilter>();
         m_meshRenderer = GetComponent<MeshRenderer>();
         m_capsuleCollider = GetComponent<CapsuleCollider>();
+
+        m_defaultScale = transform.localScale;
     }
 
     void Update()
@@ -87,7 +86,7 @@ public class Tree : MonoBehaviour
         {
             if (m_stumpDestroyTimer.TimeCount(Time.deltaTime, true))
             {
-                SetFadeScale(0);
+                SetFadeScale(Vector3.zero);
 
                 gameObject.tag = "RespawnTree";
             }
@@ -96,7 +95,7 @@ public class Tree : MonoBehaviour
         {
             if (m_respawnTimer.TimeCount(Time.deltaTime, true))
             {
-                SetFadeScale(1);
+                SetFadeScale(m_defaultScale);
 
                 gameObject.tag = "Tree";
 
@@ -108,7 +107,7 @@ public class Tree : MonoBehaviour
 
                     m_meshRenderer.materials = m_treeMaterial;
 
-                    m_capsuleCollider.center = m_treeColliderCenter;
+                    m_capsuleCollider.center = new Vector3(0, m_treeColliderHeight / 2, 0);
                     m_capsuleCollider.radius = m_treeColliderRadius;
                     m_capsuleCollider.height = m_treeColliderHeight;
                 }
@@ -134,7 +133,7 @@ public class Tree : MonoBehaviour
                 
                 m_meshRenderer.materials = m_stumpMaterial;
 
-                m_capsuleCollider.center = m_stumpColliderCenter;
+                m_capsuleCollider.center = new Vector3(0, m_stumpColliderHeight / 2, 0);
                 m_capsuleCollider.radius = m_stumpColliderRadius;
                 m_capsuleCollider.height = m_stumpColliderHeight;
             }
@@ -148,8 +147,11 @@ public class Tree : MonoBehaviour
     {
         if (m_treeCrownPrefab != null)
         {
-            Vector3 crownPosition = transform.position + new Vector3(0, m_stumpColliderHeight, 0);
+            Vector3 crownPosition = transform.position + new Vector3(0, m_stumpColliderHeight * transform.localScale.y, 0);
             var treeCrown = Instantiate(m_treeCrownPrefab, crownPosition, transform.rotation);
+            treeCrown.transform.localScale = m_defaultScale;
+
+            treeCrown.SetActive(true);
 
             // 木材のドロップ数を設定する
             treeCrown.GetComponent<TreeCrown>().SetDropWood(player.m_playerStatus);
@@ -159,9 +161,9 @@ public class Tree : MonoBehaviour
         }
     }
 
-    public void SetFadeScale(float value)
+    public void SetFadeScale(Vector3 value)
     {
-        m_fadeScale = new Vector3(value, value, value);
+        m_fadeScale = value;
         m_isFadeScale = true;
     }
 

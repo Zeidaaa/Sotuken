@@ -7,10 +7,10 @@ public class TreeCrown : MonoBehaviour
     private int m_dropNum = 2;
 
     [SerializeField] 
-    private float m_treeCrownDensity = 2.0f;
+    private float m_treeCrownDensity = 0.5f;
 
     [SerializeField]
-    private float m_fallPower = 3.0f;
+    private float m_fallPower = 5.0f;
 
     [SerializeField]
     private Timer m_dropTimer;
@@ -34,14 +34,17 @@ public class TreeCrown : MonoBehaviour
             float calculatedMass = volume * m_treeCrownDensity;
             m_rigidBody.mass = Mathf.Max(calculatedMass, 0.1f);
         }
+
+        // 重心にスケールを掛けて調整する
+        m_rigidBody.centerOfMass = new Vector3(0, m_rigidBody.centerOfMass.y * transform.localScale.y, 0);
     }
     
-    void Start()
+    public void Reset()
     {
         m_dropTimer = new Timer
             (
                 counter: 0f,
-                time: 4f
+                time: 20f
             );
     }
 
@@ -74,10 +77,15 @@ public class TreeCrown : MonoBehaviour
     {
         if (m_rigidBody == null) return;
 
+        // 力の向きと量を計算する
         direction.y = 0f;
         Vector3 pushDir = direction.normalized;
-        Vector3 forcePosition = transform.position + Vector3.up * 1.5f;
-        m_rigidBody.AddForceAtPosition(pushDir * m_fallPower, forcePosition, ForceMode.Impulse);
+        Vector3 force = pushDir * m_fallPower * transform.localScale.y;
+
+        // 力を加える位置を計算する
+        Vector3 forcePosition = transform.position + new Vector3(0, transform.localScale.y, 0);
+
+        m_rigidBody.AddForceAtPosition(force, forcePosition, ForceMode.Impulse);
     }
 
     public Vector3 GetRandomPositionInSphere(Vector3 center, float radius)
