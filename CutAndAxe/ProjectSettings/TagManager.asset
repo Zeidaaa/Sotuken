@@ -9,6 +9,7 @@ TagManager:
   - RespawnTree
   - TreeCrown
   - Wood
+  - Ground
   layers:
   - Default
   - TransparentFX

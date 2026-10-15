@@ -143,6 +143,9 @@ MonoBehaviour:
   m_dropTimer:
     counter: 0
     time: 20
+  m_collGroundTimer:
+    counter: 0
+    time: 1.5
   m_woodPrefab: {fileID: 2741971580091193280, guid: 702c1e11b6097724fa59053ada334797, type: 3}
 --- !u!65 &8879822963517062361
 BoxCollider:

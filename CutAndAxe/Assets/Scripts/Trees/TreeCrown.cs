@@ -16,9 +16,14 @@ public class TreeCrown : MonoBehaviour
     private Timer m_dropTimer;
 
     [SerializeField]
+    private Timer m_collGroundTimer;
+
+    [SerializeField]
     private GameObject m_woodPrefab;
 
     private Rigidbody m_rigidBody;
+
+    private bool m_isCollGround = false;
 
     void Awake()
     {
@@ -46,19 +51,43 @@ public class TreeCrown : MonoBehaviour
                 counter: 0f,
                 time: 20f
             );
+
+        m_collGroundTimer = new Timer
+            (
+                counter: 0f,
+                time: 1.5f
+            );
     }
 
     void Update()
     {
+        bool isCounting = false;
+
+        // 地面に衝突してからのドロップ処理
+        if (m_isCollGround)
+        {
+            if (m_collGroundTimer.TimeCount(Time.deltaTime))
+            {
+                isCounting = true;
+            }
+        }
+
+        // 時間経過によるドロップ処理
         if (m_dropTimer.TimeCount(Time.deltaTime))
         {
-            // ドロップ処理
+            isCounting = true;
+        }
+
+        if (isCounting)
+        {
+            var capsuleCollider = GetComponent<CapsuleCollider>();
+
             for (int i = 0; i < m_dropNum; i++)
             {
-                var dropPos = GetRandomPositionInSphere(transform.position, 2.0f);
-                Instantiate(m_woodPrefab, dropPos, Quaternion.identity);
+                var dropPos = GetRandomPositionInSphere(capsuleCollider.bounds.center, capsuleCollider.radius * 2f);
+                float randomY = UnityEngine.Random.Range(0f, 360f);
+                Instantiate(m_woodPrefab, dropPos, Quaternion.Euler(0, randomY, 0));
             }
-
             Destroy(gameObject);
         }
     }
@@ -95,5 +124,13 @@ public class TreeCrown : MonoBehaviour
 
         // 中心座標を足してワールド座標にする
         return center + randomOffset;
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            m_isCollGround = true;
+        }
     }
 }
