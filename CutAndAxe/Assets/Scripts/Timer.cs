@@ -18,7 +18,6 @@ public struct Timer
     // タイマーのカウントを進める、time秒経過したらtrueを返す、AutoCounterResetがtrueならカウンターをリセットする
     public bool TimeCount(float deltaTime, bool AutoCounterReset = false)
 	{
-
         counter += deltaTime;
 		if (counter >= time)
 		{

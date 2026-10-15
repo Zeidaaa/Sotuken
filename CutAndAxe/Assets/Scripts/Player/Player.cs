@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
         controller.Move(totalMove * Time.deltaTime);
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("Wood"))
         {
