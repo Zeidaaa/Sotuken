@@ -139,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TreeCrown
   m_dropNum: 2
   m_treeCrownDensity: 0.5
-  m_fallPower: 5
+  m_fallPower: 20
   m_dropTimer:
     counter: 0
     time: 20

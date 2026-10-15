@@ -112,7 +112,7 @@ public class TreeCrown : MonoBehaviour
         Vector3 force = pushDir * m_fallPower * transform.localScale.y;
 
         // 力を加える位置を計算する
-        Vector3 forcePosition = transform.position + new Vector3(0, transform.localScale.y, 0);
+        Vector3 forcePosition = transform.position + new Vector3(0, transform.localScale.y * 3f, 0);
 
         m_rigidBody.AddForceAtPosition(force, forcePosition, ForceMode.Impulse);
     }

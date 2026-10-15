@@ -1,3 +1,4 @@
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class Tree : MonoBehaviour
@@ -76,6 +77,9 @@ public class Tree : MonoBehaviour
         m_capsuleCollider = GetComponent<CapsuleCollider>();
 
         m_defaultScale = transform.localScale;
+
+        var rigidbody = GetComponent<Rigidbody>();
+        rigidbody.mass *= m_defaultScale.x;
     }
 
     void Update()
@@ -149,7 +153,8 @@ public class Tree : MonoBehaviour
         {
             Vector3 crownPosition = transform.position + new Vector3(0, m_stumpColliderHeight * transform.localScale.y, 0);
             var treeCrown = Instantiate(m_treeCrownPrefab, crownPosition, transform.rotation);
-            treeCrown.transform.localScale = m_defaultScale;
+            float scaleValue = m_defaultScale.x + (0.15f * m_defaultScale.x);
+            treeCrown.transform.localScale = new Vector3(scaleValue, scaleValue, scaleValue);
 
             treeCrown.SetActive(true);
 
