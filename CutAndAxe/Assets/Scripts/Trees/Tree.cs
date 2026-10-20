@@ -124,8 +124,6 @@ public class Tree : MonoBehaviour
         m_treeStatus.currentHp -= Calculators.OnHitDamage(player.m_playerStatus, m_treeStatus);
         if (m_treeStatus.currentHp <= 0)
         {
-            m_treeStatus.currentHp = 0;
-
             m_stumpDestroyTimer.Counter = 0f;
 
             gameObject.tag = "Stump";
@@ -144,6 +142,8 @@ public class Tree : MonoBehaviour
 
             // 切れた木を生成する
             InstantiateTreeCrown(player);
+
+            EventBus.Publish(new TreeDestroyed(this, -m_treeStatus.currentHp));
         }
     }
 
